@@ -1,0 +1,22 @@
+h1 {
+    margin-top: 10%;
+}
+.container {
+    margin: 0 10%;
+    text-align: center;
+    background-color: bisque;
+}
+.quiz {
+    display: block;
+}
+.start {
+    background-color: aqua;
+    outline: none;
+}
+.submit {
+    background-color: aquamarine;
+    outline: none;
+}
+#submit {
+    margin: 5% 49%;
+}
