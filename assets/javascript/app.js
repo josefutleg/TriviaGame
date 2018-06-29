@@ -6,7 +6,7 @@ var triviaQuestions = [
             b: 'Frisco',
             c: 'Fog City',
         },
-        correctAnswer: 'Yerba Buena',
+        correctAnswer: 'a',
     },
     {
         question: "What were the San Francisco Giants' original name?",
@@ -15,7 +15,7 @@ var triviaQuestions = [
                 b: 'New York Gothams',
                 c: 'San Francisco Seals',
             },
-            correctAnswer: 'New York Gothams',
+            correctAnswer: 'b',
     },
     {
         question: "What is the official color of the Golden Gate Bridge?",
@@ -24,7 +24,7 @@ var triviaQuestions = [
                 b: 'Golden Gate Red',
                 c: 'Sonoma Wine',
             },
-            correctAnswer: 'International Orange',
+            correctAnswer: 'a',
     },
     {
         question: "What is the city's official instrument?",
@@ -33,7 +33,16 @@ var triviaQuestions = [
                 b: 'Drums',
                 c: 'Accordian',
             },
-            correctAnswer: 'Accordian',
+            correctAnswer: 'c',
+    },
+    {
+        question: "What year did the Philadelphia (now Golden State) Warriors move to San Francisco?",
+            answers:{
+                a: '1962',
+                b: '1993',
+                c: '1987',
+            },
+            correctAnswer: 'a',
     },
 
 ]
@@ -41,60 +50,61 @@ var triviaQuestions = [
 var startButton = $('<button>').text('start game').addClass('start');
 $('.quiz').append(startButton);
 var answerArray = [];
+// var userGuesses = [];
 var choices;
-var losses = 0;
-$('.start').on('click',function startGame (){
-    //create a timer and append to page
+
+function buildQuiz(){
     startButton.remove();
+    $('.quiz').css('display', 'block');
     for (index in triviaQuestions){
-        // console.log(triviaQuestions[index].correctAnswer);
         var questionDoc = triviaQuestions[index].question;
         var createQuestionP = $('<h4>').text(questionDoc);
-        answerArray.push(triviaQuestions[index].correctAnswer);
         $('.quiz').append(createQuestionP);
             for(letter in triviaQuestions[index].answers){
-                // console.log(triviaQuestions[index].answers[letter]);
                 choices = triviaQuestions[index].answers[letter];
-                // var createChoices = $(`<button value="${choices}">`);
-                var createChoices = $(`<input type="radio" name="${choices}" value="${choices}">`);
+                answerArray.push(choices);
+                var createChoices = $(`<input type="radio" name="${index}" value="${letter}"><label>`);
                 createChoices.text(choices);    
                 $('.quiz').append(createChoices);
             }                 
     }
-    // for (a in answerArray){
-    //     console.log(answerArray[a]);
-    // }
     var submitButton = $('<button>').text('submit').addClass('submit');
-    $('#submit').append(submitButton);
+    $('#submit').append(submitButton);    
+}
+
+$('.start').on('click',function (){
+    //create a timer and append to page
+    buildQuiz();
+
 });
 
-$('.quiz').on('click','input', function(){
-    var selection = $(this).val();
-    for (a in answerArray){
-        console.log(selection === answerArray[a]);
-        // if (selection == answerArray[a]){
-        //     alert('true');
-        //     return;
-        // }  else {
-        //     var addLosses = loss
-        //     console.log('false');
-        // }
-    }
 
-    // debugger;
-  });
+
+// $('.quiz').on('click','input', function(){
+//     var selection = $('input').
+//     // userGuesses.push(selection);
+
+//     debugger;
+//   });
 
 $('#submit').on('click','button', function(){
 var submitQuiz = $(this);
 var displayResults = $('<div>').addClass('results');
 var correctDoc = $('<p>').text(`Correct Guesses: `);
 var incorrectDoc = $('<p>').text(`Incorrect Guesses: `);
+var unansweredDoc = $('<p>').text(`Unanswered: `);
+var userGuesses;
+var correctGuesses = 0;
+// for (i in answerArray){
+//     console.log(i);
+// }
 displayResults.append(correctDoc);
 displayResults.append(incorrectDoc);
+displayResults.append(unansweredDoc);
 $('.quiz').hide();
 $('.container').append(displayResults);
 $('#submit').remove();
-$('.results').append(startButton);
+// $('.results').append(startButton);
 
 
 // debugger;
