@@ -57,12 +57,12 @@ var triviaQuestions = [
     {
         question: "What year was the big earthquake?",
             answers:{
-                a: '1906',
-                b: '1989',
-                c: '1850',
+                a: '1850',
+                b: '1906',
+                c: '1989',
                 d: '2005',
             },
-            correctAnswer: 'a',
+            correctAnswer: 'b',
     },
     {
         question: "San Francisco’s cable cars are the only National Historical Monument that can move.",
@@ -172,8 +172,8 @@ else if (correct !== correctAnswerArray.length){
 }
 
     var displayResults = $('<div>').addClass('results');
-    var correctDoc = $('<h4>').text(`Correct Guesses: ${correct} `);
-    var incorrectDoc = $('<h4>').text(`Incorrect Guesses: ${incorrect}`);
+    var correctDoc = $('<h4>').text(`Correct: ${correct} `);
+    var incorrectDoc = $('<h4>').text(`Incorrect: ${incorrect}`);
     var unansweredDoc = $('<h4>').text(`Unanswered: ${unanswered}`);
 
     displayResults.append(correctDoc);
