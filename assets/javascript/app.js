@@ -11,7 +11,7 @@ var triviaQuestions = [
     {
         question: "What were the San Francisco Giants' original name?",
             answers:{
-                a: 'New York Giants',
+                a: 'Troy Trojans',
                 b: 'New York Gothams',
                 c: 'San Francisco Seals',
             },
@@ -39,74 +39,154 @@ var triviaQuestions = [
         question: "What year did the Philadelphia (now Golden State) Warriors move to San Francisco?",
             answers:{
                 a: '1962',
-                b: '1993',
+                b: '1971',
                 c: '1987',
+                d: '1993',
             },
             correctAnswer: 'a',
     },
-
+    {
+        question: "Which company was not founded in San Francisco?",
+            answers:{
+                a: "Levi's",
+                b: 'Gap',
+                c: 'Uniqlo',
+            },
+            correctAnswer: 'c',
+    },
+    {
+        question: "What year was the big earthquake?",
+            answers:{
+                a: '1906',
+                b: '1989',
+                c: '1850',
+                d: '2005',
+            },
+            correctAnswer: 'a',
+    },
+    {
+        question: "San Francisco’s cable cars are the only National Historical Monument that can move.",
+            answers:{
+                a: 'True',
+                b: 'False',
+            },
+            correctAnswer: 'a',
+    },
+    {
+        question: "The Chinese fortune cookie was invented by a Japanese resident of San Francisco.",
+            answers:{
+                a: 'True',
+                b: 'False',
+            },
+            correctAnswer: 'a',
+    },
+    {
+        question: "Which American gangster was held at Alcatraz?",
+            answers:{
+                a: 'John Dillinger',
+                b: 'Bugsy Siegel',
+                c: 'Al Capone'
+            },
+            correctAnswer: 'c',
+    },
 ]
 
 var startButton = $('<button>').text('start game').addClass('start');
+var directionsDoc = $('<h4>').text('Test your knowledge of the greatest city in the galaxy in 60 seconds!');
+$('.quiz').append(directionsDoc);
 $('.quiz').append(startButton);
-var answerArray = [];
-// var userGuesses = [];
+
+var correctAnswerArray = [];
 var choices;
+var seconds = 61;
+var timer;
+var incorrect = 0;
+var correct = 0;
+var unanswered = 0;
+
+function setTimer(){
+    seconds = seconds - 1;
+    var makeTimer = $('<p>').text(`Time Remaining: ${seconds}`);
+    $('.timer').html(makeTimer);
+
+    if (seconds === -1){
+        clearInterval(timer);
+        showResults();
+        makeTimer.remove()
+    }
+}
 
 function buildQuiz(){
     startButton.remove();
+    directionsDoc.remove();
     $('.quiz').css('display', 'block');
     for (index in triviaQuestions){
+        var questionDiv = $('<div>').addClass(`questionContainer${index}`);
         var questionDoc = triviaQuestions[index].question;
         var createQuestionP = $('<h4>').text(questionDoc);
-        $('.quiz').append(createQuestionP);
+            questionDiv.append(createQuestionP);
+        $('.quiz').append(questionDiv);
             for(letter in triviaQuestions[index].answers){
                 choices = triviaQuestions[index].answers[letter];
-                answerArray.push(choices);
-                var createChoices = $(`<input type="radio" name="${index}" value="${letter}"><label>`);
-                createChoices.text(choices);    
-                $('.quiz').append(createChoices);
-            }                 
+                var createChoices = $(`<input type="radio" name="${index}" value="${letter}">`);
+                var createLabel = $('<label>');
+                createLabel.text(choices);
+                $(questionDiv).append(createChoices);
+                $(questionDiv).append(createLabel);
+            } 
+            correctAnswerArray.push(triviaQuestions[index].correctAnswer);             
     }
+
     var submitButton = $('<button>').text('submit').addClass('submit');
     $('#submit').append(submitButton);    
 }
 
 $('.start').on('click',function (){
-    //create a timer and append to page
+    timer = setInterval(setTimer, 1000);
     buildQuiz();
-
 });
 
+function showResults(){
+for (i in triviaQuestions){
+    var q = $(`input:radio[name=${i}]:checked`).val();
+    console.log(q);
+    if (q === triviaQuestions[i].correctAnswer){
+        correct++;
+    }
+    else if (q === undefined){
+        unanswered++;
+    }
+    else if (q !== triviaQuestions[i].correctAnswer){
+        incorrect++;    
+    }
+}
 
+if (correct == correctAnswerArray.length){
+    $('h1').html('Perfect Score! Great job, native!');
+}
+else if (correct >= correctAnswerArray.length/2){
+    $('h1').html('Not Bad!');
+}
+else if (correct !== correctAnswerArray.length){
+    $('h1').html('Yikes!');
+}
 
-// $('.quiz').on('click','input', function(){
-//     var selection = $('input').
-//     // userGuesses.push(selection);
+    var displayResults = $('<div>').addClass('results');
+    var correctDoc = $('<h4>').text(`Correct Guesses: ${correct} `);
+    var incorrectDoc = $('<h4>').text(`Incorrect Guesses: ${incorrect}`);
+    var unansweredDoc = $('<h4>').text(`Unanswered: ${unanswered}`);
 
-//     debugger;
-//   });
+    displayResults.append(correctDoc);
+    displayResults.append(incorrectDoc);
+    displayResults.append(unansweredDoc);
+
+    $('.quiz').hide();
+    $('.container').append(displayResults);
+    $('#submit').remove();
+}
 
 $('#submit').on('click','button', function(){
-var submitQuiz = $(this);
-var displayResults = $('<div>').addClass('results');
-var correctDoc = $('<p>').text(`Correct Guesses: `);
-var incorrectDoc = $('<p>').text(`Incorrect Guesses: `);
-var unansweredDoc = $('<p>').text(`Unanswered: `);
-var userGuesses;
-var correctGuesses = 0;
-// for (i in answerArray){
-//     console.log(i);
-// }
-displayResults.append(correctDoc);
-displayResults.append(incorrectDoc);
-displayResults.append(unansweredDoc);
-$('.quiz').hide();
-$('.container').append(displayResults);
-$('#submit').remove();
-// $('.results').append(startButton);
-
-
-// debugger;
-
+    showResults();
+    clearInterval(timer);
+    $('.timer').hide();
 });
